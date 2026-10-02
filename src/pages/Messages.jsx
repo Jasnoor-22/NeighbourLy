@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { conversations as initialConversations } from '../data/messages'
 import { getProviderById } from '../data/providers'
+import Avatar from '../components/Avatar'
 
 export default function Messages() {
   const [conversations, setConversations] = useState(initialConversations)
@@ -36,7 +37,7 @@ export default function Messages() {
     <div className="container" style={{ padding: '32px 24px 60px' }}>
       <div className="page-header" style={{ padding: '0 0 20px' }}>
         <h1>Messages</h1>
-        <p>Chat with sellers and buyers about your bookings.</p>
+        <p>Chat with sellers and buyers about your bookings and custom requests.</p>
       </div>
 
       <div className="messages-layout">
@@ -50,16 +51,24 @@ export default function Messages() {
                 onClick={() => selectConversation(c.id)}
                 role="button"
                 tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') selectConversation(c.id)
+                }}
               >
-                <span className="avatar">{provider?.avatar}</span>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <h4>{provider?.shortName}</h4>
+                <Avatar
+                  src={provider?.avatarUrl}
+                  name={provider?.name}
+                  size="sm"
+                  verified={provider?.verified}
+                />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                    <h4 className="conversation-name">{provider?.shortName || provider?.name}</h4>
                     <span className="time">{c.time}</span>
                   </div>
-                  <p>{c.lastMessage}</p>
+                  <p className="conversation-preview">{c.lastMessage}</p>
                 </div>
-                {c.unread && <span className="unread-dot" />}
+                {c.unread && <span className="unread-dot" aria-label="Unread message" />}
               </div>
             )
           })}
@@ -69,26 +78,35 @@ export default function Messages() {
           {active ? (
             <>
               <div className="chat-header">
-                <span className="avatar">{activeProvider?.avatar}</span>
-                <div>
-                  <h4 style={{ fontSize: '0.95rem' }}>{activeProvider?.name}</h4>
-                  <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{activeProvider?.tag}</p>
+                <Avatar
+                  src={activeProvider?.avatarUrl}
+                  name={activeProvider?.name}
+                  size="md"
+                  verified={activeProvider?.verified}
+                />
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <h4 style={{ fontSize: '0.98rem', color: 'var(--navy)' }}>{activeProvider?.name}</h4>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{activeProvider?.tag}</p>
                 </div>
               </div>
+
               <div className="chat-thread">
                 {active.thread.map((msg) => (
                   <div key={msg.id} className={`chat-bubble ${msg.fromMe ? 'mine' : 'theirs'}`}>
-                    {msg.text}
+                    <div className="bubble-text">{msg.text}</div>
                     <span className="bubble-time">{msg.time}</span>
                   </div>
                 ))}
               </div>
+
               <form className="chat-input-row" onSubmit={sendMessage}>
                 <input
                   type="text"
                   placeholder="Type a message..."
                   value={draft}
                   onChange={(e) => setDraft(e.target.value)}
+                  className="chat-input"
+                  aria-label="Message input"
                 />
                 <button type="submit" className="btn btn-primary btn-sm">
                   Send
@@ -96,7 +114,9 @@ export default function Messages() {
               </form>
             </>
           ) : (
-            <div className="empty-state">Select a conversation to start chatting.</div>
+            <div className="empty-state-card" style={{ margin: 'auto' }}>
+              <p>Select a conversation to start chatting.</p>
+            </div>
           )}
         </div>
       </div>

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { orders } from '../data/orders'
 import { getServiceById } from '../data/services'
 import { getProviderById } from '../data/providers'
+import ImageWithFallback from '../components/ImageWithFallback'
 
 const tabs = [
   { id: 'active', label: 'Active' },
@@ -44,30 +45,52 @@ export default function Orders() {
       </div>
 
       {filteredOrders.length === 0 ? (
-        <div className="empty-state">
-          <div className="emoji">📦</div>
-          <p>No {activeTab} orders yet.</p>
+        <div className="empty-state-card">
+          <div className="empty-state-icon" aria-hidden="true">📦</div>
+          <h3 className="empty-state-title">No {activeTab} orders</h3>
+          <p className="empty-state-desc">You don't have any orders in this category right now.</p>
+          <button
+            type="button"
+            className="btn btn-primary btn-sm"
+            onClick={() => navigate('/browse')}
+            style={{ marginTop: 12 }}
+          >
+            Explore services
+          </button>
         </div>
       ) : (
-        filteredOrders.map((order) => {
-          const service = getServiceById(order.serviceId)
-          const provider = getProviderById(order.providerId)
-          if (!service) return null
-          return (
-            <div className="order-card" key={order.id}>
-              <div className="order-media">{service.emoji}</div>
-              <div className="order-info">
-                <h4>{service.title}</h4>
-                <p>{provider?.shortName} · {order.date}</p>
+        <div className="orders-stack">
+          {filteredOrders.map((order) => {
+            const service = getServiceById(order.serviceId)
+            const provider = getProviderById(order.providerId)
+            if (!service) return null
+            return (
+              <div className="order-card" key={order.id}>
+                <div className="order-media-wrap">
+                  <ImageWithFallback
+                    src={service.image}
+                    alt={service.title}
+                    aspectRatio="1 / 1"
+                    className="order-media-thumb"
+                  />
+                </div>
+                <div className="order-info">
+                  <h4>{service.title}</h4>
+                  <p>{provider?.shortName} · {order.date}</p>
+                </div>
+                <span className="order-price">₹{order.price}</span>
+                <span className={`status-pill ${statusClass[order.status]}`}>{order.status}</span>
+                <button
+                  type="button"
+                  className="btn btn-outline btn-sm"
+                  onClick={() => navigate('/messages')}
+                >
+                  Message
+                </button>
               </div>
-              <span className="order-price">₹{order.price}</span>
-              <span className={`status-pill ${statusClass[order.status]}`}>{order.status}</span>
-              <button className="btn btn-outline btn-sm" onClick={() => navigate('/messages')}>
-                Message
-              </button>
-            </div>
-          )
-        })
+            )
+          })}
+        </div>
       )}
     </div>
   )

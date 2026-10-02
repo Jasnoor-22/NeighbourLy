@@ -1,12 +1,15 @@
-// Mock service listings. "emoji" stands in for a real photo so the MVP
-// doesn't depend on external images. distanceKm is a mock number used
-// for sorting/filtering by distance.
+import { serviceImages, defaultFallbackImage } from './images'
+
+// Service listings with centralized marketplace photography.
+// "emoji" is retained as a lightweight fallback icon.
+// distanceKm is used for sorting and filtering by proximity.
 export const services = [
   {
     id: 's1',
     title: 'Homework & Study Help',
     category: 'academic',
     providerId: 'p1',
+    image: serviceImages.s1,
     emoji: '📘',
     price: 200,
     priceType: 'hour',
@@ -25,6 +28,7 @@ export const services = [
     title: 'Art & Poster Making',
     category: 'creative',
     providerId: 'p2',
+    image: serviceImages.s2,
     emoji: '🖌️',
     price: 150,
     priceType: 'starting',
@@ -43,6 +47,7 @@ export const services = [
     title: 'Crochet Products',
     category: 'handmade',
     providerId: 'p3',
+    image: serviceImages.s3,
     emoji: '🧶',
     price: 300,
     priceType: 'starting',
@@ -61,6 +66,7 @@ export const services = [
     title: 'Video Editing',
     category: 'creative',
     providerId: 'p4',
+    image: serviceImages.s4,
     emoji: '🎬',
     price: 400,
     priceType: 'hour',
@@ -79,6 +85,7 @@ export const services = [
     title: 'Web Development',
     category: 'tech',
     providerId: 'p5',
+    image: serviceImages.s5,
     emoji: '💻',
     price: 500,
     priceType: 'hour',
@@ -97,6 +104,7 @@ export const services = [
     title: 'Presentation & Slide Design',
     category: 'academic',
     providerId: 'p1',
+    image: serviceImages.s6,
     emoji: '📊',
     price: 250,
     priceType: 'starting',
@@ -115,6 +123,7 @@ export const services = [
     title: 'Event Decoration',
     category: 'events',
     providerId: 'p6',
+    image: serviceImages.s7,
     emoji: '🎈',
     price: 1500,
     priceType: 'starting',
@@ -133,6 +142,7 @@ export const services = [
     title: 'Baking — Custom Cakes',
     category: 'handmade',
     providerId: 'p3',
+    image: serviceImages.s8,
     emoji: '🎂',
     price: 600,
     priceType: 'starting',
@@ -151,6 +161,7 @@ export const services = [
     title: 'Basic Tech Help & Setup',
     category: 'tech',
     providerId: 'p5',
+    image: serviceImages.s9,
     emoji: '🛠️',
     price: 250,
     priceType: 'hour',
@@ -169,6 +180,7 @@ export const services = [
     title: 'Photography — Portraits & Events',
     category: 'creative',
     providerId: 'p4',
+    image: serviceImages.s10,
     emoji: '📷',
     price: 800,
     priceType: 'starting',
@@ -187,6 +199,7 @@ export const services = [
     title: 'Art Commissions',
     category: 'creative',
     providerId: 'p2',
+    image: serviceImages.s11,
     emoji: '🖼️',
     price: 350,
     priceType: 'starting',
@@ -205,6 +218,7 @@ export const services = [
     title: 'Furniture Assembly & Small Repairs',
     category: 'home',
     providerId: 'p6',
+    image: serviceImages.s12,
     emoji: '🪛',
     price: 300,
     priceType: 'hour',
@@ -223,6 +237,7 @@ export const services = [
     title: 'Proofreading & Writing Feedback',
     category: 'academic',
     providerId: 'p1',
+    image: serviceImages.s13,
     emoji: '📝',
     price: 150,
     priceType: 'starting',
@@ -241,6 +256,7 @@ export const services = [
     title: 'Custom Crochet Bags & Accessories',
     category: 'handmade',
     providerId: 'p3',
+    image: serviceImages.s14,
     emoji: '👜',
     price: 450,
     priceType: 'starting',
@@ -256,7 +272,13 @@ export const services = [
   },
 ]
 
-export const getServiceById = (id) => services.find((s) => s.id === id)
+export const getServiceById = (id) => {
+  const found = services.find((s) => s.id === id)
+  if (found && !found.image) {
+    found.image = defaultFallbackImage
+  }
+  return found
+}
 
 export const getServicesByProvider = (providerId) =>
   services.filter((s) => s.providerId === providerId)

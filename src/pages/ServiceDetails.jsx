@@ -3,6 +3,8 @@ import { useParams, useNavigate, Link } from 'react-router-dom'
 import Rating from '../components/Rating'
 import Badge from '../components/Badge'
 import Modal from '../components/Modal'
+import Avatar from '../components/Avatar'
+import ImageWithFallback from '../components/ImageWithFallback'
 import { getProviderById } from '../data/providers'
 import { getReviewsForService } from '../data/reviews'
 import { formatPrice, formatDistance } from '../utils/format'
@@ -33,7 +35,14 @@ export default function ServiceDetails() {
 
       <div className="details-grid">
         <div>
-          <div className="details-media">{service.emoji}</div>
+          <div className="details-media-container">
+            <ImageWithFallback
+              src={service.image}
+              alt={service.title}
+              aspectRatio="16 / 9"
+              className="details-hero-img"
+            />
+          </div>
 
           <div className="details-card" style={{ marginTop: 20 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -46,11 +55,24 @@ export default function ServiceDetails() {
                 </div>
               </div>
               <button
-                className="icon-btn"
-                aria-label="Save to favorites"
+                className={`fav-btn-action details-fav-btn ${favorited ? 'favorited' : ''}`}
+                aria-label={favorited ? 'Remove from favorites' : 'Save to favorites'}
+                aria-pressed={favorited}
                 onClick={() => toggleFavorite(service.id)}
               >
-                {favorited ? '❤️' : '🤍'}
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill={favorited ? '#ef4444' : 'none'}
+                  stroke={favorited ? '#ef4444' : '#19213d'}
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
               </button>
             </div>
 
@@ -117,14 +139,20 @@ export default function ServiceDetails() {
                 onClick={() => navigate(`/provider/${provider.id}`)}
                 role="button"
                 tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') navigate(`/provider/${provider.id}`)
+                }}
+                aria-label={`View profile for ${provider.name}`}
               >
-                <span className="avatar">{provider.avatar}</span>
-                <div>
-                  <h4>
-                    {provider.name}{' '}
-                    {provider.verified && <Badge variant="mint">✓</Badge>}
-                  </h4>
-                  <p>{provider.tag}</p>
+                <Avatar
+                  src={provider.avatarUrl}
+                  name={provider.name}
+                  size="md"
+                  verified={provider.verified}
+                />
+                <div className="provider-mini-info">
+                  <h4 className="provider-mini-name">{provider.name}</h4>
+                  <p className="provider-mini-tag">{provider.tag}</p>
                 </div>
               </div>
             )}

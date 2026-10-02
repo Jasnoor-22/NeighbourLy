@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { useServices } from '../context/ServicesContext'
 import ServiceCard from '../components/ServiceCard'
+import Avatar from '../components/Avatar'
+import { providerAvatars } from '../data/images'
 import { orders } from '../data/orders'
 
 const defaultProfile = {
@@ -35,7 +37,11 @@ export default function Profile() {
   return (
     <div className="container" style={{ padding: '32px 24px 60px' }}>
       <div className="profile-header">
-        <span className="avatar" style={{ width: 84, height: 84, fontSize: '2.4rem' }}>🙂</span>
+        <Avatar
+          src={providerAvatars.me}
+          name={profile.name}
+          size="xl"
+        />
         <div style={{ flex: 1 }}>
           <h1 style={{ fontSize: '1.4rem', color: 'var(--navy)' }}>{profile.name}</h1>
           <p style={{ color: 'var(--text-muted)', marginTop: 4 }}>📍 {profile.location}</p>

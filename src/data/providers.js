@@ -1,11 +1,15 @@
-// Mock provider (seller) profiles.
+import { providerAvatars, portfolioImages, defaultAvatarImage } from './images'
+
+// Provider (seller) profiles with authentic photography and portfolios.
+// "avatar" emoji is retained as a lightweight icon fallback.
 export const providers = [
   {
     id: 'p1',
     name: 'Aanya Sharma',
     shortName: 'Aanya S.',
-    tag: 'College Student',
+    tag: 'College Student & Tutor',
     avatar: '🧕',
+    avatarUrl: providerAvatars.p1,
     verified: true,
     rating: 4.8,
     reviewCount: 32,
@@ -14,6 +18,7 @@ export const providers = [
     bio: "I'm a second-year student who loves breaking down tough concepts into simple explanations. I've been tutoring juniors in maths and science for two years.",
     skills: ['Maths Tutoring', 'Science Tutoring', 'Exam Prep', 'Presentation Help'],
     portfolio: ['📐', '🧪', '📊'],
+    portfolioImages: portfolioImages.p1,
   },
   {
     id: 'p2',
@@ -21,51 +26,58 @@ export const providers = [
     shortName: 'Dev M.',
     tag: 'Freelance Designer',
     avatar: '🧑‍🎨',
+    avatarUrl: providerAvatars.p2,
     verified: true,
     rating: 4.7,
     reviewCount: 21,
     completedServices: 29,
     location: 'Near Main Market',
-    bio: 'Graphic designer who makes posters, banners and social posts for local shops, events and college fests. Quick turnaround, unlimited-ish patience for revisions.',
+    bio: 'Graphic designer who makes posters, banners and social posts for local shops, events and college fests. Quick turnaround, unlimited patience for revisions.',
     skills: ['Poster Design', 'Social Media Graphics', 'Branding', 'Canva & Illustrator'],
     portfolio: ['🖼️', '📰', '🪧'],
+    portfolioImages: portfolioImages.p2,
   },
   {
     id: 'p3',
     name: 'Riya Kapoor',
     shortName: 'Riya K.',
-    tag: 'Hobbyist Maker',
+    tag: 'Hobbyist Maker & Baker',
     avatar: '🧵',
+    avatarUrl: providerAvatars.p3,
     verified: true,
     rating: 4.9,
     reviewCount: 54,
     completedServices: 60,
     location: 'Near City Centre',
-    bio: "I'm a student who enjoys design, research and creating presentations — and outside of that, I crochet. Custom colours and sizes always welcome.",
-    skills: ['Crochet', 'Amigurumi', 'Custom Orders', 'Gift Wrapping'],
+    bio: "I'm a student who enjoys design, research and creating presentations — and outside of that, I crochet and bake. Custom colours and flavours always welcome.",
+    skills: ['Crochet', 'Amigurumi', 'Custom Orders', 'Artisan Baking'],
     portfolio: ['🧸', '🧣', '👜'],
+    portfolioImages: portfolioImages.p3,
   },
   {
     id: 'p4',
     name: 'Sahil Pillai',
     shortName: 'Sahil P.',
-    tag: 'Video Editor',
+    tag: 'Video Editor & Photographer',
     avatar: '🎬',
+    avatarUrl: providerAvatars.p4,
     verified: false,
     rating: 4.6,
     reviewCount: 17,
     completedServices: 22,
     location: 'Near Lakeview Colony',
-    bio: 'I edit reels, YouTube videos and event highlight clips. Comfortable with fast turnarounds for social content.',
-    skills: ['Reels Editing', 'Colour Grading', 'Motion Titles', 'YouTube Edits'],
+    bio: 'I edit reels, YouTube videos and event highlight clips. Comfortable with fast turnarounds for social content and portrait shoots.',
+    skills: ['Reels Editing', 'Colour Grading', 'Motion Titles', 'Portraits'],
     portfolio: ['🎞️', '📹', '🎥'],
+    portfolioImages: portfolioImages.p4,
   },
   {
     id: 'p5',
     name: 'Neha Thomas',
     shortName: 'Neha T.',
-    tag: 'Web Developer',
+    tag: 'Web Developer & Tech Specialist',
     avatar: '👩‍💻',
+    avatarUrl: providerAvatars.p5,
     verified: true,
     rating: 4.8,
     reviewCount: 19,
@@ -74,22 +86,31 @@ export const providers = [
     bio: 'I build simple, clean websites for small local businesses and student projects — portfolio sites, landing pages and basic e-commerce fronts.',
     skills: ['HTML/CSS', 'React', 'Basic SEO', 'Landing Pages'],
     portfolio: ['🖥️', '🧩', '🌐'],
+    portfolioImages: providerAvatars.p5 ? portfolioImages.p5 : [],
   },
   {
     id: 'p6',
     name: 'Ishaan Verma',
     shortName: 'Ishaan V.',
-    tag: 'Home Help',
+    tag: 'Home Help & Event Setup',
     avatar: '🧑‍🔧',
+    avatarUrl: providerAvatars.p6,
     verified: true,
     rating: 4.5,
     reviewCount: 12,
     completedServices: 18,
     location: 'Near Green Park',
-    bio: 'I help with small home fixes, furniture assembly and general handy work around the neighbourhood.',
-    skills: ['Furniture Assembly', 'Basic Repairs', 'Painting Touch-ups'],
+    bio: 'I help with small home fixes, furniture assembly, event decoration and general handy work around the neighbourhood.',
+    skills: ['Furniture Assembly', 'Basic Repairs', 'Event Decor', 'Painting Touch-ups'],
     portfolio: ['🔧', '🪛', '🖌️'],
+    portfolioImages: portfolioImages.p6,
   },
 ]
 
-export const getProviderById = (id) => providers.find((p) => p.id === id)
+export const getProviderById = (id) => {
+  const found = providers.find((p) => p.id === id)
+  if (found && !found.avatarUrl) {
+    found.avatarUrl = defaultAvatarImage
+  }
+  return found
+}

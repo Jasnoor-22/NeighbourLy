@@ -63,23 +63,48 @@ export default function Browse() {
       </div>
 
       <div className="browse-layout">
-        <FilterPanel filters={filters} onChange={setFilters} />
+        <FilterPanel
+          filters={filters}
+          onChange={setFilters}
+          onReset={() => setFilters(defaultFilters)}
+        />
 
         <div>
           <div className="browse-toolbar">
-            <span className="result-count">{results.length} services found</span>
-            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-              <option value="recommended">Recommended</option>
-              <option value="closest">Closest</option>
-              <option value="rated">Highest Rated</option>
-              <option value="price">Lowest Price</option>
-            </select>
+            <span className="result-count">
+              <strong>{results.length}</strong> {results.length === 1 ? 'service' : 'services'} found
+            </span>
+            <div className="sort-wrapper">
+              <label htmlFor="sort-select" className="sort-label">Sort by:</label>
+              <select
+                id="sort-select"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="sort-select"
+              >
+                <option value="recommended">Recommended</option>
+                <option value="closest">Closest distance</option>
+                <option value="rated">Highest rated</option>
+                <option value="price">Lowest price</option>
+              </select>
+            </div>
           </div>
 
           {results.length === 0 ? (
-            <div className="empty-state">
-              <div className="emoji">🔍</div>
-              <p>No services match your filters yet. Try widening your search.</p>
+            <div className="empty-state-card">
+              <div className="empty-state-icon" aria-hidden="true">🔍</div>
+              <h3 className="empty-state-title">No services match your filters</h3>
+              <p className="empty-state-desc">Try clearing some filters or searching for broader terms.</p>
+              <button
+                type="button"
+                className="btn btn-outline btn-sm"
+                onClick={() => {
+                  setQuery('')
+                  setFilters(defaultFilters)
+                }}
+              >
+                Clear all filters
+              </button>
             </div>
           ) : (
             <div className="grid">

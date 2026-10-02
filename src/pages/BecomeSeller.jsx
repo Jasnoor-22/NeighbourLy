@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { categories } from '../data/categories'
 import { useServices } from '../context/ServicesContext'
+import { categoryImages, defaultFallbackImage } from '../data/images'
 
 const TOTAL_STEPS = 5
 
@@ -50,6 +51,7 @@ export default function BecomeSeller() {
       title: form.title || 'Untitled service',
       category: form.category || 'other',
       providerId: 'me',
+      image: categoryImages[form.category] || defaultFallbackImage,
       emoji: form.emoji || '✨',
       price: Number(form.price) || 0,
       priceType: form.priceType,

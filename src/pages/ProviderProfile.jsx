@@ -1,6 +1,8 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import Rating from '../components/Rating'
 import Badge from '../components/Badge'
+import Avatar from '../components/Avatar'
+import ImageWithFallback from '../components/ImageWithFallback'
 import ServiceCard from '../components/ServiceCard'
 import { getProviderById } from '../data/providers'
 import { getServicesByProvider } from '../data/services'
@@ -13,18 +15,26 @@ export default function ProviderProfile() {
   if (!provider) return <NotFound />
 
   const providerServices = getServicesByProvider(provider.id)
+  const portfolioList = provider.portfolioImages || []
 
   return (
     <div className="container" style={{ padding: '32px 24px 60px' }}>
       <div className="profile-header">
-        <span className="avatar">{provider.avatar}</span>
+        <Avatar
+          src={provider.avatarUrl}
+          name={provider.name}
+          size="xl"
+          verified={provider.verified}
+        />
         <div style={{ flex: 1 }}>
           <h1 style={{ fontSize: '1.5rem', color: 'var(--navy)', display: 'flex', alignItems: 'center', gap: 8 }}>
             {provider.name}
-            {provider.verified && <Badge variant="mint">✓ Verified</Badge>}
+            {provider.verified && <Badge variant="trust">✓ Verified</Badge>}
           </h1>
           <p style={{ color: 'var(--text-muted)', marginTop: 4 }}>{provider.tag} · 📍 {provider.location}</p>
-          <p style={{ marginTop: 12, color: 'var(--text-main)', maxWidth: 520 }}>"{provider.bio}"</p>
+          <p style={{ marginTop: 12, color: 'var(--text-main)', maxWidth: 520, lineHeight: 1.5 }}>
+            "{provider.bio}"
+          </p>
 
           <div className="profile-stats">
             <div>
@@ -41,7 +51,11 @@ export default function ProviderProfile() {
             </div>
           </div>
         </div>
-        <button className="btn btn-primary" onClick={() => navigate('/messages')}>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => navigate('/messages')}
+        >
           Message
         </button>
       </div>
@@ -49,7 +63,7 @@ export default function ProviderProfile() {
       <div className="section" style={{ paddingBottom: 20 }}>
         <div className="section-head">
           <div>
-            <h2 style={{ fontSize: '1.2rem' }}>Skills</h2>
+            <h2 style={{ fontSize: '1.2rem' }}>Skills & Expertise</h2>
           </div>
         </div>
         <div className="tag-row">
@@ -61,18 +75,31 @@ export default function ProviderProfile() {
 
       <div className="section" style={{ paddingTop: 0, paddingBottom: 20 }}>
         <div className="section-head">
-          <h2 style={{ fontSize: '1.2rem' }}>Portfolio</h2>
+          <h2 style={{ fontSize: '1.2rem' }}>Featured Work & Portfolio</h2>
         </div>
         <div className="portfolio-grid">
-          {provider.portfolio.map((item, i) => (
-            <div className="portfolio-tile" key={i}>{item}</div>
-          ))}
+          {portfolioList.length > 0 ? (
+            portfolioList.map((imgUrl, i) => (
+              <div className="portfolio-tile-photo" key={i}>
+                <ImageWithFallback
+                  src={imgUrl}
+                  alt={`${provider.name}'s portfolio sample ${i + 1}`}
+                  aspectRatio="1 / 1"
+                  className="portfolio-thumb"
+                />
+              </div>
+            ))
+          ) : (
+            provider.portfolio.map((item, i) => (
+              <div className="portfolio-tile" key={i}>{item}</div>
+            ))
+          )}
         </div>
       </div>
 
       <div className="section" style={{ paddingTop: 0 }}>
         <div className="section-head">
-          <h2 style={{ fontSize: '1.2rem' }}>Services offered</h2>
+          <h2 style={{ fontSize: '1.2rem' }}>Services offered ({providerServices.length})</h2>
         </div>
         <div className="grid">
           {providerServices.map((service) => (
